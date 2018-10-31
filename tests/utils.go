@@ -19,7 +19,7 @@ package tests
 import (
 	"sync"
 
-	"github.com/getamis/istanbul-tools/container"
+	"github.com/jpmorganchase/istanbul-tools/container"
 )
 
 func WaitFor(geths []container.Ethereum, waitFn func(eth container.Ethereum, wg *sync.WaitGroup)) {
