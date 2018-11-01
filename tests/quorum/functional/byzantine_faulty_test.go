@@ -112,7 +112,7 @@ var _ = Describe("QFS-05: Byzantine Faulty", func() {
 				})
 			})
 			close(done)
-		}, 60)
+		}, 120)
 	})
 
 })
