@@ -1,0 +1,74 @@
+---
+version: 2.1
+
+executors:
+  go_executor:
+    resource_class: medium
+    docker:
+      - image: circleci/golang:1.15-buster
+        auth:
+          username: $DOCKER_USER_RO
+          password: $DOCKER_PASSWORD_RO       
+    working_directory: ~/project 
+  
+commands:
+  prepare:
+    description: "Prepare"
+    steps:
+      - checkout
+
+jobs:
+  build:
+    executor: go_executor
+    steps:
+      - prepare
+      - run:
+          name: build
+          command: |
+            make
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - ./
+      - store_artifacts:
+          name: build artifacts
+          path:  build/bin/istanbul
+          destination: istanbul
+          when: always
+
+  publishDocker:
+    executor: go_executor
+    steps:
+      - prepare
+      - attach_workspace:
+          at: ~/project
+      - setup_remote_docker
+      - run:
+          name: Build image
+          command: |
+            docker login --username "${DOCKER_USER_RW}" --password "${DOCKER_PASSWORD_RW}"
+            docker build -t consensys/istanbul-tools:$CIRCLE_SHA1 .
+            docker push consensys/istanbul-tools:$CIRCLE_SHA1
+
+            docker tag consensys/istanbul-tools:$CIRCLE_SHA1 consensys/istanbul-tools:latest
+            docker push consensys/istanbul-tools:latest
+
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - build:
+          context:
+            - dockerhub-quorumengineering-ro      
+      - publishDocker:
+          context:
+            - dockerhub-quorumengineering-ro    
+            - dockerhub-quorumengineering-rw
+          filters:
+            branches:
+              only:
+                - master
+                - /^release-.*/
+          requires:
+            - build                
