@@ -131,10 +131,6 @@ func decode(ctx *cli.Context) error {
 		fmt.Println("validator: ", v.Hex())
 	}
 
-	if len(istanbulExtra.Seal) != 0 {
-		fmt.Println("seal:", "0x"+common.Bytes2Hex(istanbulExtra.Seal))
-	}
-
 	for _, seal := range istanbulExtra.CommittedSeal {
 		fmt.Println("committed seal: ", "0x"+common.Bytes2Hex(seal))
 	}

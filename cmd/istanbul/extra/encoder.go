@@ -38,7 +38,6 @@ func Encode(vanity string, validators []common.Address) (string, error) {
 
 	ist := &atypes.IstanbulExtra{
 		Validators:    validators,
-		Seal:          make([]byte, atypes.IstanbulExtraSeal),
 		CommittedSeal: [][]byte{},
 	}
 

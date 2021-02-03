@@ -124,7 +124,6 @@ func appendValidators(genesis *core.Genesis, addrs []common.Address) {
 
   ist := &types.IstanbulExtra{
     Validators:    addrs,
-    Seal:          []byte{},
     CommittedSeal: [][]byte{},
   }
 
