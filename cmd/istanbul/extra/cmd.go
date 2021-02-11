@@ -135,5 +135,11 @@ func decode(ctx *cli.Context) error {
 		fmt.Println("committed seal: ", "0x"+common.Bytes2Hex(seal))
 	}
 
+	for _, validatorVote := range istanbulExtra.Vote {
+		fmt.Printf("validator vote: address=0x%x, type=%x\n", validatorVote.RecipientAddress, validatorVote.VoteType)
+	}
+
+	fmt.Println("round: ", istanbulExtra.Round.Uint64())
+
 	return nil
 }
